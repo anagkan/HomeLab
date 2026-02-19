@@ -1,0 +1,8 @@
+# Claude related (avoid committing AI context and local settings)
+/.claude/
+CLAUDE.md
+
+*.env
+
+# macOS
+.DS_Store
