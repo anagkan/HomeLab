@@ -1,0 +1,11 @@
+# Authelia users database - EXAMPLE
+# Copy to user_database.yaml and replace with your own users.
+# Generate password hashes with: docker compose exec authelia authelia crypto hash generate argon2 --password 'yourpassword'
+
+users:
+  example:
+    displayname: "Example User"
+    password: # Insert password hash here
+    email: user@example.com
+    groups:
+      - admins
