@@ -14,7 +14,7 @@ This is my second attempt at building a personal web server for the sake of self
     * I would like to collect some Linux ISOs...
 * Spin up an LXC to mess around with local LLMs
     * GPU prices... 🫤
-* Maybe switch to nginx as my reverse proxy instead of Traefik. Unsure about this one because there is no need to overcomplicate my setup.
+* Maybe switch to Nginx as my reverse proxy instead of Traefik. Unsure about this one because there is no need to overcomplicate my setup.
 
 # Understanding this Repository
 
@@ -34,4 +34,4 @@ The vast majority of my services run in containers on Docker. To spin them up, I
 
 ### Non-Docker Services
 
-*[Fail2Ban](FAIL2BAN.md): Works with Authelia to prevent brute-force attacks and unauthorized access.
+* [Fail2Ban](FAIL2BAN.md): Works with Authelia to prevent brute-force attacks and unauthorized access.
