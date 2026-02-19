@@ -1,3 +1,3 @@
 # Setting up Traefik
 
-[Traefik Documentation](https://github.com/traefik/traefik)
+[Traefik Documentation](https://doc.traefik.io/traefik/)
