@@ -30,7 +30,7 @@ The vast majority of my services run in containers on Docker. To spin them up, I
 * [BookLore](/booklore/README.md): E-Book reader/storage/archiver
 * [Jellyfin](/jellyfin/README.md): 
 * [OmniTools](/omnitools/README.md):
-* [akanagala.com](/akanagala.com/README.md): An nginx
+* [Personal Website (Nginx)](/personal_website/README.md): An nginx container where I host my website for the main domain.
 
 ### Non-Docker Services
 
