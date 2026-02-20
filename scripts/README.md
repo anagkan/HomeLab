@@ -13,7 +13,6 @@ chmod +x [scriptname.sh]
 To execute:
 ```
 ./restart_all.sh
-
 ```
 
 ## [down_all.sh](down_all.sh)
