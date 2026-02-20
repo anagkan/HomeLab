@@ -35,3 +35,7 @@ The vast majority of my services run in containers on Docker. To spin them up, I
 ### Non-Docker Services
 
 * [Fail2Ban](FAIL2BAN.md): Works with Authelia to prevent brute-force attacks and unauthorized access.
+
+# AI Use
+
+Claude Code was incredibly helpful the first time I pieced my server together.
