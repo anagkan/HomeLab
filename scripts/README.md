@@ -2,4 +2,8 @@
 
 ## restart_all.sh
 
-Restart_All essentially goes through every single 
+restart_all.sh essentially goes through every single 
+
+```
+./
+```
