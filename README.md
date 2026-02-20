@@ -10,7 +10,7 @@ This is my second attempt at building a personal web server for the sake of self
 
 ## Long Term Goals
 
-* Set up an *arr stack, buy a NAS, and set up a media stack
+* Set up a media stack: *arr stack + buy a NAS
     * I would like to collect some Linux ISOs...
 * Spin up an LXC to mess around with local LLMs
     * GPU prices... 🫤
@@ -18,7 +18,7 @@ This is my second attempt at building a personal web server for the sake of self
 
 # Understanding this Repository
 
-The vast majority of my services run in containers on Docker. To spin them up, I use Docker Compose and docker-compose.yml files. I have chosen to give each service its own docker-compose.yaml file to make it easy to spin up and kill individual services as necessary. Each service that runs in docker gets its own subdirectory with a docker-compose.yml and any other necessary items.
+The vast majority of my services run in containers on Docker. To spin them up, I use Docker Compose and docker-compose.yaml files. I have chosen to give each service its own docker-compose.yaml file to make it easy to spin up and kill individual services as necessary. Each service that runs in docker gets its own subdirectory with a docker-compose.yml and any other necessary items.
 
 ### Docker Services:
 
