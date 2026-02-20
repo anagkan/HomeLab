@@ -2,7 +2,7 @@
 
 This project started back in September/October 2025 when I wanted to merge some PDFs together. I didn't like Mac's built-in tool, so I used a random web-based merger.
 
-I knew no one cared about my Econometrics pset, but I did think about the privacy concerns while I was uploading. And then I went down the self-hosting rabbit hole. During winter break of '25-'26, I first built a web server for my self hosting needs using an old OptiPlex 7010. Not a week after returning to campus, the hard drive failed. Before I set up backups...
+I knew no one cared about my Econometrics PSET, but I did think about the privacy concerns while I was uploading. And then I went down the self-hosting rabbit hole. During winter break of '25-'26, I first built a web server for my self hosting needs using an old OptiPlex 7010. Not a week after returning to campus, the hard drive failed. Before I set up backups...
 
 And now here we are.
 
