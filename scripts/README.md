@@ -1,12 +1,12 @@
 # Some Handy Dandy Scripts!
 
-### Make a script executable
+## Make a script executable
 
 ```
 chmod +x [scriptname.sh]
 ```
 
-### [restart_all.sh](restart_all.sh)
+## [restart_all.sh](restart_all.sh)
 
 'restart_all.sh' essentially goes through every single (specified) docker container, kills it, and then starts it up again. It then displays the status of the Fail2Ban daemon and all docker containers.
 
