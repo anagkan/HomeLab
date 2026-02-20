@@ -6,7 +6,7 @@ I knew no one cared about my Econometrics pset, but I did think about the privac
 
 And now here we are.
 
-This is my second attempt at building a personal web server for the sake of self-hosting a number of useful applications/services, as opposed to using a cloud-based option and giving out my data. This time, everything is backed up. This repo serves as documentation for myself and a way for anyone else who is interested to recreate my setup.
+This is my second attempt at building a personal web server for the sake of self-hosting a number of useful applications/services, as opposed to using a cloud-based option and giving out my data. This time, everything is backed up. This repo serves as documentation for myself and a way for anyone else who is interested in recreating my setup.
 
 ## Long Term Goals
 
