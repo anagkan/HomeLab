@@ -7,5 +7,6 @@ CLAUDE.md
 # macOS
 .DS_Store
 
-# Authelia (User Database has hashed credentials)
+# Authelia (user database has hashed credentials)
 authelia/users_database.yaml
+authelia/user_database.yaml

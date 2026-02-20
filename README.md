@@ -10,7 +10,7 @@ This is my second attempt at building a personal web server for the sake of self
 
 ## Long Term Goals
 
-* Set up an *arr stack and buy a NAS for additional storage
+* Set up an *arr stack, buy a NAS, and set up a media stack
     * I would like to collect some Linux ISOs...
 * Spin up an LXC to mess around with local LLMs
     * GPU prices... 🫤
