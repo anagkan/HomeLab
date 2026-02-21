@@ -34,6 +34,13 @@ The YouTube video linked above will also guide you through the process.
 
 # After LXC Creation
 
+### Download Docker:
+
+```
+sudo apt-get update
+sudo apt-get install ./docker-desktop-amd64.deb
+```
+
 # Router Setup
 
 My home network is made up of my Internet Service Provider's (ISP) modem/router which has a Google WiFi mesh network connected to it, used as my house's primary network. In order to separate my webserver from the rest of my network, I found an old WRT54G router and flashed it with DD-WRT.
@@ -41,3 +48,23 @@ My home network is made up of my Internet Service Provider's (ISP) modem/router 
 ## Port Forwarding
 
 To be updated...
+
+# Helpful Upgrades (Optional)
+
+### GUI File Manager
+
+I tried Midnight Commander. It's decent, I guess?
+
+To download:
+```
+apt-get install mc
+```
+
+### Another Text Editor
+
+Honestly, Nano is completely fine. But you can try Micro if you'd like.
+
+To download:
+```
+apt install micro
+```
