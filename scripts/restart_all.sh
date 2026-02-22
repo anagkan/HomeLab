@@ -26,12 +26,12 @@ restart_service() {
 
 # Start in dependency order
 
-restart_service  "Traefik"  "/root/traefik" 5
-restart_service  "Authelia"  "/root/authelia"  5
-restart_service  "DDNS-Updater"  "/root/ddns" 5
-restart_service  "BentoPDF"  "/root/BentoPDF" 5
-restart_service  "PairDrop"  "/root/PairDrop" 10
-restart_service  "BookLore"  "/root/booklore" 20
+restart_service  "Traefik"  "/root/HomeLab/traefik" 5
+restart_service  "Authelia"  "/root/HomeLab/authelia"  5
+restart_service  "DDNS-Updater"  "/root/HomeLab/ddns" 5
+restart_service  "BentoPDF"  "/root/HomeLab/bentopdf" 5
+restart_service  "PairDrop"  "/root/HomeLab/pairdrop" 10
+restart_service  "BookLore"  "/root/HomeLab/booklore" 20
 
 echo ""
 echo "=== Fail2Ban Status ==="
