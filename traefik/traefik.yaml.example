@@ -29,7 +29,7 @@ providers:
     watch: true
 
 certificatesResolvers:
-  ${CERTRESOLVER}:
+  # Add domain provider here:
     acme:
       email: # Add email here
       storage: /acme.json
