@@ -1,7 +1,9 @@
 services:
   bentopdf:
-    image: ghcr.io/alam00000/bentopdf-simple:latest
+    image: bentopdf/bentopdf-simple:latest
     container_name: bentopdf
+    #ports:
+      #-
     restart: unless-stopped
     networks:
       - proxy
@@ -12,11 +14,15 @@ services:
       - "traefik.http.routers.bentopdf.rule=Host(`bentopdf.${DOMAIN}`)"
       - "traefik.http.routers.bentopdf.entrypoints=websecure"
       - "traefik.http.routers.bentopdf.tls=true"
-      - "traefik.http.routers.bentopdf.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.bentopdf.tls.certresolver=${CERTRESOLVER}"
+      - "traefik.http.services.bentopdf.loadbalancer.server.port=8080"
+      - "traefik.http.routers.bentopdf.tls.domains[0].main=${DOMAIN}"                                                                                         
+      - "traefik.http.routers.bentopdf.tls.domains[0].sans=*.${DOMAIN}"
+      
 
       # Authelia middleware
       - "traefik.http.routers.bentopdf.middlewares=authelia@docker"
 
-  networks:
-    proxy:
-      external: true
+networks:
+  proxy:
+    external: true
