@@ -31,10 +31,10 @@ providers:
 certificatesResolvers:
   ${CERTRESOLVER}:
     acme:
-      email: ${ACME_EMAIL}
+      email: # Add email here
       storage: /acme.json
       dnsChallenge:                                                                                                                                                                                                                                            
-        provider: ${CERTRESOLVER}
+        provider: # Add domain provider here
         delayBeforeCheck: 60s                                                                                                                                                                                                                                   
         resolvers:                                                                                                                                                             
           - "1.1.1.1:53"                                                                                                                                                                                                                                       

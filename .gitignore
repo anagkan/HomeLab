@@ -7,6 +7,9 @@ CLAUDE.md
 # macOS
 .DS_Store
 
+# Traefik (static config contains email, hardcoded resolver)
+traefik/traefik.yaml
+
 # DDNS-Updater (config contains API keys)
 ddns-updater/data/config.json
 
