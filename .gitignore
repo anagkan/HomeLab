@@ -7,6 +7,9 @@ CLAUDE.md
 # macOS
 .DS_Store
 
+# DDNS-Updater (config contains API keys)
+ddns-updater/data/config.json
+
 # Authelia (user database has hashed credentials)
 authelia/users_database.yaml
 authelia/user_database.yaml

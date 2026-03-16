@@ -1,0 +1,34 @@
+services:
+    ddns-updater:
+      image: qmcgaw/ddns-updater:latest
+      container_name: ddns-updater
+
+      restart: unless-stopped
+
+      networks:
+        - proxy
+
+      volumes:
+        - ./data:/updater/data
+
+      environment:
+        - PERIOD=5m
+        - LOG_LEVEL=info
+
+      labels:
+        # Traefik
+        - "traefik.enable=true"
+        - "traefik.docker.network=proxy"
+        - "traefik.http.routers.ddns-updater.rule=Host(`ddns.${DOMAIN}`)"
+        - "traefik.http.routers.ddns-updater.entrypoints=websecure"
+        - "traefik.http.routers.ddns-updater.tls=true"
+        - "traefik.http.routers.ddns-updater.tls.certresolver=${CERTRESOLVER}"
+        - "traefik.http.services.ddns-updater.loadbalancer.server.port=8000"
+        - "traefik.http.routers.ddns-updater.tls.domains[0].main=${DOMAIN}"
+        - "traefik.http.routers.ddns-updater.tls.domains[0].sans=*.${DOMAIN}"
+        # Authelia middleware
+        - "traefik.http.routers.ddns-updater.middlewares=authelia@docker"
+
+networks:
+  proxy:
+    external: true
