@@ -11,6 +11,7 @@ services:
     labels:
       # Traefik
       - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
       - "traefik.http.routers.bentopdf.rule=Host(`bentopdf.${DOMAIN}`)"
       - "traefik.http.routers.bentopdf.entrypoints=websecure"
       - "traefik.http.routers.bentopdf.tls=true"

@@ -19,6 +19,7 @@ services:
       
       labels:
         - "traefik.enable=true"
+        - "traefik.docker.network=proxy"
         - "traefik.http.routers.vikunja.rule=Host(`vikunja.${DOMAIN}`)"
         - "traefik.http.routers.vikunja.entrypoints=websecure"
         - "traefik.http.routers.vikunja.tls=true"
