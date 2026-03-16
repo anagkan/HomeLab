@@ -28,9 +28,13 @@ restart_service() {
 
 restart_service  "Traefik"  "/root/HomeLab/traefik" 5
 restart_service  "Authelia"  "/root/HomeLab/authelia"  5
-restart_service  "DDNS-Updater"  "/root/HomeLab/ddns_updater" 5
+restart_service  "DDNS-Updater"  "/root/HomeLab/ddns-updater" 5
 restart_service  "BentoPDF"  "/root/HomeLab/bentopdf" 5
 restart_service  "PairDrop"  "/root/HomeLab/pairdrop" 10
+restart_service  "n8n"  "/root/HomeLab/n8n" 10
+restart_service  "Vikunja"  "root/HomeLab/vikunja" 10
+restart_service  "Omnitools"  "root/HomeLab/omnitools" 5
+restart_service  ""
 restart_service  "BookLore"  "/root/HomeLab/booklore" 20
 
 echo ""

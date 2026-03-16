@@ -50,6 +50,7 @@ access_control:
       # Admin Only:
       - domain:
           - traefik.${DOMAIN}
+          - ddns.${DOMAIN}
         policy: one_factor
         subject:
           - "group:admins"

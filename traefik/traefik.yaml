@@ -35,7 +35,7 @@ certificatesResolvers:
       storage: /acme.json
       dnsChallenge:                                                                                                                                                                                                                                            
         provider: ${CERTRESOLVER}
-        delayBeforeCheck: 60                                                                                                                                                                                                                                   
+        delayBeforeCheck: 60s                                                                                                                                                                                                                                   
         resolvers:                                                                                                                                                             
           - "1.1.1.1:53"                                                                                                                                                                                                                                       
           - "8.8.8.8:53"
