@@ -2,7 +2,7 @@
 
 [Traefik Documentation](https://doc.traefik.io/traefik/)
 
-acme.json must have 600 permissions.
+Create and grant acme.json 600 permissions:
 
 ```
 touch acme.json
