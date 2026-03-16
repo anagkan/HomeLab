@@ -4,6 +4,7 @@
 
 users:
   example:
+    disabled: false
     displayname: "Example User"
     password: # Create password hash with "docker compose exec authelia authelia crypto hash generate argon2 --password 'yourpassword'"
     email: user@example.com

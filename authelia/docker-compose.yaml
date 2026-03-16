@@ -1,0 +1,36 @@
+services:                                                                                                                                                                                                                                                      
+  authelia:                                                                                                                                                                                                                                                    
+    image: authelia/authelia:latest                                                                                                                                                                                                                            
+    container_name: authelia                                                                                                                                                                                                                                   
+    
+    restart: unless-stopped                                                                                                                                                                                                                                    
+    
+    volumes:                                                                                                                                                                                                                                                   
+      - ./configuration.yaml:/config/configuration.yaml                                                                                                                                                                                                       
+      - ./users_database.yaml:/config/users_database.yaml                                                                                                                                                                                                     
+      - ./data:/config/data
+    
+    networks:                                                                                                                                                                                                                                                  
+      - proxy                                                                                                                                                                                                                                                  
+    
+    environment:                                                                                                                                                                                                                                               
+      - TZ=America/New_York 
+    env_file:
+      - .env                                                                                                                                                                                                                               
+    
+    labels:                                                                                                                                                                                                                                                    
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"                                                                                                                                                                                                                               
+      - "traefik.http.routers.authelia.entrypoints=websecure"                                                                                                                                                                                                      
+      - "traefik.http.routers.authelia.tls=true" 
+      - "traefik.http.routers.authelia.rule=Host(`auth.${DOMAIN}`)"                                                                                                                                                                                                            
+      - "traefik.http.routers.authelia.tls.certresolver=${CERTRESOLVER}"
+      - "traefik.http.routers.authelia.tls.domains[0].main=${DOMAIN}"
+      - "traefik.http.routers.authelia.tls.domains[0].sans=*.${DOMAIN}"
+      - "traefik.http.middlewares.authelia.forwardauth.address=http://authelia:9091/api/authz/forward-auth"
+      - "traefik.http.middlewares.authelia.forwardauth.trustForwardHeader=true"
+      - "traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User,Remote-Groups,Remote-Name,Remote-Email"                                                                                                                                 
+
+networks:                                                                                                                                                                                                                                                      
+  proxy:                                                                                                                                                                                                                                                       
+    external: true

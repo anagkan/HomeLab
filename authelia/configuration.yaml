@@ -1,0 +1,86 @@
+theme: dark
+default_2fa_method: totp
+
+server:
+    address: tcp://:9091
+
+log:
+    level: info
+    file_path: /config/data/authelia.log
+    keep_stdout: true
+
+identity_validation:
+    reset_password:
+      jwt_secret: ${JWT_SECRET}
+
+totp:
+    issuer: ${DOMAIN}
+
+authentication_backend:
+    file:
+      path: /config/users_database.yaml
+      password:
+        algorithm: argon2
+        argon2:
+          variant: argon2id
+          iterations: 3
+          memory: 16384
+          parallelism: 4
+          salt_length: 16
+          key_length: 32
+
+access_control:
+    default_policy: deny
+    rules:
+
+      # CalDAV bypass for Vikunja
+      - domain: vikunja.${DOMAIN}
+        resources:
+          - "^/dav/.*/"
+        policy: bypass
+
+      # Authelia Portal
+      - domain: auth.${DOMAIN}
+        policy: bypass
+
+      # Public Root Domain
+      - domain: ${DOMAIN}
+        policy: bypass
+
+      # Admin Only:
+      - domain:
+          - traefik.${DOMAIN}
+        policy: one_factor
+        subject:
+          - "group:admins"
+
+      # All Authenticated Users:
+      - domain:
+          - pairdrop.${DOMAIN}
+          - bentopdf.${DOMAIN}
+          - booklore.${DOMAIN}
+          - vikunja.${DOMAIN}
+          - omnitools.${DOMAIN}
+          - n8n.${DOMAIN}
+          - jellyfin.${DOMAIN}
+
+        policy: one_factor
+
+session:
+    secret: ${SESSION_SECRET}
+    cookies:
+      - domain: ${DOMAIN}
+        authelia_url: https://auth.${DOMAIN}
+        same_site: lax
+        inactivity: 30m
+        expiration: 1h
+        remember_me: 1M
+
+storage:
+    encryption_key: ${ENCRYPTION_KEY}
+    local:
+      path: /config/data/db.sqlite3
+
+notifier:
+    filesystem:
+      filename: /config/data/notification.txt
