@@ -1,0 +1,36 @@
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    
+    restart: unless-stopped
+    
+    networks:
+      - proxy
+
+    environment:
+      - WEBHOOK_URL=https://n8n.${DOMAIN}
+      - N8N_HOST=n8n.${DOMAIN}
+      - N8N_PROTOCOL=https
+
+    volumes:
+      - ./data:/home/node/.n8n
+
+    labels:
+      # Traefik
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.n8n.rule=Host(`n8n.${DOMAIN}`)"
+      - "traefik.http.routers.n8n.entrypoints=websecure"
+      - "traefik.http.routers.n8n.tls=true"
+      - "traefik.http.routers.n8n.tls.certresolver=${CERTRESOLVER}"
+      - "traefik.http.services.n8n.loadbalancer.server.port=5678"
+      - "traefik.http.routers.n8n.tls.domains[0].main=${DOMAIN}"
+      - "traefik.http.routers.n8n.tls.domains[0].sans=*.${DOMAIN}"
+
+      # Authelia middleware
+      - "traefik.http.routers.n8n.middlewares=authelia@docker"
+
+networks:
+  proxy:
+    external: true
