@@ -6,7 +6,7 @@ services:
     restart: unless-stopped                                                                                                                                                                                                                                    
     
     volumes:                                                                                                                                                                                                                                                   
-      - ./configuration.yaml:/config/configuration.yaml                                                                                                                                                                                                       
+      - ./configuration.yaml:/config/configuration.yml                                                                                                                                                                                                       
       - ./users_database.yaml:/config/users_database.yaml                                                                                                                                                                                                     
       - ./data:/config/data
     

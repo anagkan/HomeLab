@@ -8,6 +8,11 @@ Create and grant acme.json 600 permissions:
 touch acme.json
 chmod 600 acme.json
 ```
+Create proxy:
+```
+docker network create proxy
+```
+
 
 To run container:
 ```
