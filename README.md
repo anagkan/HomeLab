@@ -8,6 +8,99 @@ And now here we are.
 
 This is my second attempt at building a personal web server for the sake of self-hosting a number of useful applications/services, as opposed to using a cloud-based option and giving out my data. This time, everything is backed up. This repo serves as documentation for myself and a way for anyone else who is interested in recreating my setup.
 
+# Toplogy
+
+```mermaid
+graph TD
+      subgraph Internet
+          USER["👤 Users<br/>akanagala.com"]
+          LE["Let's Encrypt"]
+          PORKBUN["Porkbun DNS"]
+      end
+
+      subgraph Home Network
+          MODEM["ISP Modem/Router<br/>Port 443 forwarded"]
+          WRT["WRT54G DD-WRT<br/>Port 443 forwarded"]
+          GOOGLE_WIFI["Google WiFi Mesh<br/>Home network (separate)"]
+
+          subgraph Proxmox Host ["Dell OptiPlex 7010 — Proxmox VE (192.168.3.111)"]
+              TAILSCALE["Tailscale<br/>SSH Access"]
+
+              subgraph LXC ["Debian LXC Container (192.168.3.120) — 2 CPU, 4 GiB RAM"]
+                  FAIL2BAN["Fail2Ban<br/>(native)"]
+
+                  subgraph Docker ["Docker (proxy network)"]
+                      TRAEFIK["Traefik<br/>Reverse Proxy<br/>:80 → :443"]
+                      AUTHELIA["Authelia<br/>SSO/Auth"]
+                      DDNS["DDNS-Updater"]
+
+                      subgraph Apps ["Applications"]
+                          BENTOPDF["BentoPDF"]
+                          BOOKLORE["BookLore"]
+                          JELLYFIN["Jellyfin"]
+                          N8N["n8n"]
+                          OMNI["OmniTools"]
+                          PAIRDROP["PairDrop"]
+                          VIKUNJA["Vikunja"]
+                      end
+
+                      subgraph Monitoring ["Monitoring Stack (monitoring network)"]
+                          GRAFANA["Grafana"]
+                          PROMETHEUS["Prometheus"]
+                          NODE_EXP["Node Exporter"]
+                          CADVISOR["cAdvisor"]
+                      end
+                  end
+              end
+          end
+      end
+
+      %% External traffic flow
+      USER -->|"HTTPS :443"| MODEM
+      MODEM -->|":443"| WRT
+      WRT -->|":443"| TRAEFIK
+      MODEM --- GOOGLE_WIFI
+
+      %% Traefik routing
+      TRAEFIK -->|"auth middleware"| AUTHELIA
+      TRAEFIK --> BENTOPDF
+      TRAEFIK --> BOOKLORE
+      TRAEFIK --> JELLYFIN
+      TRAEFIK --> N8N
+      TRAEFIK --> OMNI
+      TRAEFIK --> PAIRDROP
+      TRAEFIK --> VIKUNJA
+      TRAEFIK --> GRAFANA
+
+      %% SSL & DNS
+      TRAEFIK <-->|"DNS Challenge"| PORKBUN
+      TRAEFIK <-->|"ACME Certs"| LE
+      DDNS -->|"Syncs public IP"| PORKBUN
+
+      %% Monitoring
+      PROMETHEUS --> NODE_EXP
+      PROMETHEUS --> CADVISOR
+      PROMETHEUS --> AUTHELIA
+      GRAFANA --> PROMETHEUS
+
+      %% Fail2Ban
+      FAIL2BAN -->|"Reads logs"| AUTHELIA
+
+      %% SSH access
+      TAILSCALE -.->|"SSH"| LXC
+
+      %% Styling
+      classDef critical fill:#ff6b6b,stroke:#c0392b,color:#fff
+      classDef app fill:#74b9ff,stroke:#2980b9,color:#fff
+      classDef monitoring fill:#a29bfe,stroke:#6c5ce7,color:#fff
+      classDef infra fill:#55efc4,stroke:#00b894,color:#fff
+
+      class TRAEFIK,AUTHELIA critical
+      class BENTOPDF,BOOKLORE,JELLYFIN,N8N,OMNI,PAIRDROP,VIKUNJA app
+      class GRAFANA,PROMETHEUS,NODE_EXP,CADVISOR monitoring
+      class DDNS,FAIL2BAN,TAILSCALE infra
+```
+
 ## Long Term Goals
 
 * Set up a media stack: *arr stack + buy a NAS (expensive‼️)
