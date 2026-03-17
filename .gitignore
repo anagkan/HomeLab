@@ -16,3 +16,4 @@ ddns-updater/data/config.json
 # Authelia (user database has hashed credentials)
 authelia/users_database.yaml
 authelia/user_database.yaml
+authelia/configuration.yaml
