@@ -31,6 +31,7 @@ The vast majority of my services run in containers on Docker. To spin them up, I
 * [Jellyfin](/jellyfin/README.md): 
 * [OmniTools](/omnitools/README.md):
 * [n8n](/n8n/README.md): Automation
+* [Prometheus + Grafana](/monitoring/README.md): Visualizing data
 
 ### Non-Docker Services
 
