@@ -40,11 +40,11 @@ services:
       - monitoring
 
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
 
     command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--config.file=/etc/prometheus/prometheus.yaml"
       - "--storage.tsdb.retention.time=15d"
 
   node-exporter:
