@@ -29,7 +29,7 @@ providers:
     watch: true
 
 certificatesResolvers:
-  # Add domain provider here:
+  your-provider-here: # e.g., porkbun, cloudflare, etc.
     acme:
       email: # Add email here
       storage: /acme.json
