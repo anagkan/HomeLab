@@ -11,10 +11,12 @@ services:
     environment:
       - WEBHOOK_URL=https://n8n.${DOMAIN}
       - N8N_HOST=n8n.${DOMAIN}
+      - N8N_PORT=5678
       - N8N_PROTOCOL=https
 
     volumes:
       - ./data:/home/node/.n8n
+      - ./local-files:/files
 
     labels:
       # Traefik
