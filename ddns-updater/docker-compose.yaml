@@ -13,7 +13,7 @@ services:
 
       environment:
         - PERIOD=5m
-        - LOG_LEVEL=info
+        - LOG_LEVEL=debug
 
       labels:
         # Traefik

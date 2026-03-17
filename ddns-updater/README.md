@@ -4,3 +4,6 @@ Make sure to create a data folder
 ```
 mkdir data
 ```
+```
+chmod 777 /root/HomeLab/ddns-updater/data/
+```
