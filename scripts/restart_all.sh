@@ -35,7 +35,7 @@ restart_service  "n8n"  "/root/HomeLab/n8n" 10
 restart_service  "Vikunja"  "/root/HomeLab/vikunja" 10
 restart_service  "Omnitools"  "/root/HomeLab/omnitools" 5
 # restart_service  "Jellyfin" "/root/HomeLab/jellyfin" 10
-restart_service  "BookLore"  "/root/HomeLab/booklore" 20
+# restart_service  "BookLore"  "/root/HomeLab/booklore" 20
 
 echo ""
 echo "=== Fail2Ban Status ==="
