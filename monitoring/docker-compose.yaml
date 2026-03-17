@@ -1,0 +1,93 @@
+services:
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+
+    restart: unless-stopped
+
+    networks:
+      - proxy
+      - monitoring
+
+    environment:
+      - GF_SERVER_ROOT_URL=https://monitoring.${DOMAIN}
+
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+    labels:
+      # Traefik
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.monitoring.rule=Host(`monitoring.${DOMAIN}`)"
+      - "traefik.http.routers.monitoring.entrypoints=websecure"
+      - "traefik.http.routers.monitoring.tls=true"
+      - "traefik.http.routers.monitoring.tls.certresolver=${CERTRESOLVER}"
+      - "traefik.http.services.monitoring.loadbalancer.server.port=3000"
+      - "traefik.http.routers.monitoring.tls.domains[0].main=${DOMAIN}"
+      - "traefik.http.routers.monitoring.tls.domains[0].sans=*.${DOMAIN}"
+
+      # Authelia middleware
+      - "traefik.http.routers.monitoring.middlewares=authelia@docker"
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+
+    restart: unless-stopped
+
+    networks:
+      - monitoring
+
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention.time=15d"
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+
+    restart: unless-stopped
+
+    networks:
+      - monitoring
+
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--path.rootfs=/rootfs"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+
+    restart: unless-stopped
+
+    networks:
+      - monitoring
+
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+
+volumes:
+  grafana_data:
+  prometheus_data:
+
+networks:
+  proxy:
+    external: true
+  monitoring:
+    driver: bridge

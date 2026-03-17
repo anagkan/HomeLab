@@ -31,7 +31,6 @@ The vast majority of my services run in containers on Docker. To spin them up, I
 * [Jellyfin](/jellyfin/README.md): 
 * [OmniTools](/omnitools/README.md):
 * [n8n](/n8n/README.md): Automation
-* [Personal Website (Nginx)](/personal_website/README.md): An nginx container where I host my website for the main domain.
 
 ### Non-Docker Services
 
