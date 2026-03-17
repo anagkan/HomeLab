@@ -33,6 +33,9 @@ services:
       # Authelia middleware
       - "traefik.http.routers.n8n.middlewares=authelia@docker"
 
+volumes:
+  n8n_data:
+
 networks:
   proxy:
     external: true
