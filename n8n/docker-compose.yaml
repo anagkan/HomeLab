@@ -15,7 +15,7 @@ services:
       - N8N_PROTOCOL=https
 
     volumes:
-      - ./data:/home/node/.n8n
+      - n8n_data:/home/node/.n8n
       - ./local-files:/files
 
     labels:
