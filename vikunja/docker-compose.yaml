@@ -30,6 +30,7 @@ services:
 
         # Authelia middleware (web UI only)
         - "traefik.http.routers.vikunja.middlewares=authelia@docker"
+        - "traefik.http.routers.vikunja.priority=1"
 
         # API router - bypasses Authelia so native apps can authenticate directly
         - "traefik.http.routers.vikunja-api.rule=Host(`vikunja.${DOMAIN}`) && (PathPrefix(`/api`) || PathPrefix(`/dav`) || PathPrefix(`/.well-known`))"
