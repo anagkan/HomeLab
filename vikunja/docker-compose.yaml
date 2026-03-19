@@ -36,9 +36,6 @@ services:
         - "traefik.http.routers.vikunja-api.rule=Host(`vikunja.${DOMAIN}`) && (PathPrefix(`/api`) || PathPrefix(`/dav`) || PathPrefix(`/.well-known`))"
         - "traefik.http.routers.vikunja-api.entrypoints=websecure"
         - "traefik.http.routers.vikunja-api.tls=true"
-        - "traefik.http.routers.vikunja-api.tls.certresolver=${CERTRESOLVER}"
-        - "traefik.http.routers.vikunja-api.tls.domains[0].main=${DOMAIN}"
-        - "traefik.http.routers.vikunja-api.tls.domains[0].sans=*.${DOMAIN}"
         - "traefik.http.routers.vikunja-api.service=vikunja"
         - "traefik.http.routers.vikunja-api.priority=100"
 
