@@ -21,6 +21,7 @@ stop_service() {
 
 # stop_service  "BookLore"  "/root/HomeLab/booklore" 5
 # stop_service  "Jellyfin" "/root/HomeLab/jellyfin" 5
+stop_service  "Monitoring" "/root/HomeLab/monitoring" 5
 stop_service  "Omnitools"  "/root/HomeLab/omnitools" 5
 stop_service  "Vikunja"  "/root/HomeLab/vikunja" 5
 stop_service  "n8n"  "/root/HomeLab/n8n" 5
