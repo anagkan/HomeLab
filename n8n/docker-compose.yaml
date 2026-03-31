@@ -31,8 +31,17 @@ services:
       - "traefik.http.routers.n8n.tls.domains[0].main=${DOMAIN}"
       - "traefik.http.routers.n8n.tls.domains[0].sans=*.${DOMAIN}"
 
+      - "traefik.http.routers.n8n.priority=1"
+
       # Authelia middleware
       - "traefik.http.routers.n8n.middlewares=authelia@docker"
+
+      # Webhook router - bypasses Authelia so Telegram/external calls can hit webhooks
+      - "traefik.http.routers.n8n-webhooks.rule=Host(`n8n.${DOMAIN}`) && (PathPrefix(`/webhook`) || PathPrefix(`/webhook-test`))"
+      - "traefik.http.routers.n8n-webhooks.entrypoints=websecure"
+      - "traefik.http.routers.n8n-webhooks.tls=true"
+      - "traefik.http.routers.n8n-webhooks.service=n8n"
+      - "traefik.http.routers.n8n-webhooks.priority=100"
 
 volumes:
   n8n_data:
