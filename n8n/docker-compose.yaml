@@ -13,7 +13,7 @@ services:
       - N8N_HOST=n8n.${DOMAIN}
       - N8N_PORT=5678
       - N8N_PROTOCOL=https
-      - N8N_SECURE_COOKIE=false
+      - N8N_DIAGNOSTICS_ENABLED=false
 
     volumes:
       - n8n_data:/home/node/.n8n
