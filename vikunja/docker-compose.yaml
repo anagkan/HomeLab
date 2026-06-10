@@ -7,12 +7,14 @@ services:
       environment:
         VIKUNJA_SERVICE_PUBLICURL: https://vikunja.${DOMAIN}
         VIKUNJA_SERVICE_JWTSECRET: ${VIKUNJA_JWT_SECRET}
-        VIKUNJA_SERVICE_ENABLEREGISTRATION: "true"  # Set to "false" after creating your account
+        VIKUNJA_SERVICE_ENABLEREGISTRATION: "false"  # OIDC auto-creates users; login page is publicly reachable
         VIKUNJA_DATABASE_TYPE: sqlite
         VIKUNJA_DATABASE_PATH: /app/vikunja/files/vikunja.db
       
       volumes:
         - ./files:/app/vikunja/files
+        # OIDC provider config — must be a file, env vars alone won't register it
+        - ./config.yaml:/app/vikunja/config.yaml:ro
       
       networks:
         - proxy
@@ -25,19 +27,13 @@ services:
         - "traefik.http.routers.vikunja.tls=true"
         - "traefik.http.routers.vikunja.tls.certresolver=${CERTRESOLVER}"
         - "traefik.http.services.vikunja.loadbalancer.server.port=3456"
-        - "traefik.http.routers.vikunja.tls.domains[0].main=${DOMAIN}"                                                                                         
+        - "traefik.http.routers.vikunja.tls.domains[0].main=${DOMAIN}"
         - "traefik.http.routers.vikunja.tls.domains[0].sans=*.${DOMAIN}"
 
-        # Authelia middleware (web UI only)
-        - "traefik.http.routers.vikunja.middlewares=authelia@docker"
-        - "traefik.http.routers.vikunja.priority=1"
-
-        # API router - bypasses Authelia so native apps can authenticate directly
-        - "traefik.http.routers.vikunja-api.rule=Host(`vikunja.${DOMAIN}`) && (PathPrefix(`/api`) || PathPrefix(`/dav`) || PathPrefix(`/.well-known`))"
-        - "traefik.http.routers.vikunja-api.entrypoints=websecure"
-        - "traefik.http.routers.vikunja-api.tls=true"
-        - "traefik.http.routers.vikunja-api.service=vikunja"
-        - "traefik.http.routers.vikunja-api.priority=100"
+        # No Authelia forward-auth middleware: Vikunja authenticates via Authelia
+        # OIDC itself (see config.yaml). A single router serves the UI, /api, /dav,
+        # and the /auth/openid/authelia callback. CalDAV/native apps use Vikunja's
+        # own login/API tokens.
 
 
 networks:

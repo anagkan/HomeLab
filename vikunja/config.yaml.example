@@ -1,0 +1,35 @@
+# Vikunja OIDC (OpenID Connect) configuration — Authelia as the provider.
+#
+# Why this file exists: Vikunja will NOT register an OpenID provider that is
+# defined only through environment variables — the provider key must be present
+# in a config file first. So the OIDC block lives here; every other Vikunja
+# setting stays in docker-compose.yaml as VIKUNJA_* env vars.
+#
+# Copy to config.yaml (gitignored) and fill in clientsecret. Mounted at
+# /app/vikunja/config.yaml in the container.
+
+auth:
+  # Keep local username/password login as a fail-safe while OIDC is verified.
+  # Flip to false once Authelia SSO is confirmed working to make it the sole path.
+  local:
+    enabled: true
+  openid:
+    enabled: true
+    providers:
+      # Provider key "authelia" => callback is /auth/openid/authelia, which must
+      # match the redirect_uri registered in authelia/configuration.yaml.
+      authelia:
+        name: Authelia
+        # Issuer base URL; Vikunja discovers endpoints at
+        # <authurl>/.well-known/openid-configuration
+        authurl: https://auth.akanagala.com
+        clientid: vikunja
+        # Plaintext client secret (the pbkdf2 HASH of it goes in Authelia).
+        # Generate the pair on the LXC:
+        #   docker compose exec authelia authelia crypto hash generate pbkdf2 \
+        #     --variant sha512 --random --random.length 72 --random.charset rfc3986
+        clientsecret: REPLACE_WITH_PLAINTEXT_CLIENT_SECRET
+        scope: openid profile email
+        # Authelia keeps email/name out of the id_token by default; force Vikunja
+        # to read them from the userinfo endpoint instead.
+        forceuserinfo: true
