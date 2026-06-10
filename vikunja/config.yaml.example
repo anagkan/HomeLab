@@ -12,7 +12,7 @@ auth:
   # Keep local username/password login as a fail-safe while OIDC is verified.
   # Flip to false once Authelia SSO is confirmed working to make it the sole path.
   local:
-    enabled: true
+    enabled: false
   openid:
     enabled: true
     providers:

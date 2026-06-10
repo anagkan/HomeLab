@@ -29,15 +29,84 @@ authentication_backend:
           salt_length: 16
           key_length: 32
 
+# OpenID Connect provider. Services that log into Authelia directly as an OIDC
+# client (SparkyFitness, Vikunja) are registered here instead of sitting behind
+# the authelia@docker forward-auth middleware — so they also get NO forward-auth
+# rule in access_control below. Authelia does NOT hot-reload this block; restart
+# the container (docker compose up -d) after editing.
+identity_providers:
+    oidc:
+      # Generate with: docker compose exec authelia authelia crypto rand --length 64 --charset alphanumeric
+      hmac_secret: ${OIDC_HMAC_SECRET}
+      jwks:
+        # Generate the key pair on the LXC with:
+        #   docker compose exec authelia authelia crypto pair rsa generate --directory /config/data
+        # then paste the contents of /config/data private key below (PKCS#8 PEM).
+        - key_id: 'main'
+          algorithm: 'RS256'
+          use: 'sig'
+          key: |
+            -----BEGIN PRIVATE KEY-----
+            REPLACE_WITH_RSA_PRIVATE_KEY_PEM
+            -----END PRIVATE KEY-----
+      # Controls which claims are sent so SparkyFitness can map admins via groups.
+      claims_policies:
+        sparkyfitness:
+          id_token:
+            - 'groups'
+            - 'email'
+            - 'email_verified'
+            - 'preferred_username'
+            - 'name'
+      clients:
+        - client_id: 'sparkyfitness'
+          client_name: 'SparkyFitness'
+          # HASHED secret. Generate a plaintext + hash pair with:
+          #   docker compose exec authelia authelia crypto hash generate pbkdf2 \
+          #     --variant sha512 --random --random.length 72 --random.charset rfc3986
+          # Put the HASH here; put the PLAINTEXT in sparkyfitness/.env (SPARKY_FITNESS_OIDC_CLIENT_SECRET).
+          client_secret: '$pbkdf2-sha512$REPLACE_WITH_HASHED_CLIENT_SECRET'
+          public: false
+          authorization_policy: 'one_factor'
+          claims_policy: 'sparkyfitness'
+          # If SparkyFitness sends a PKCE code challenge you can harden this with:
+          #   require_pkce: true
+          #   pkce_challenge_method: 'S256'
+          redirect_uris:
+            # Better Auth SSO plugin callback: /api/auth/sso/callback/<provider_slug>
+            # (slug = SPARKY_FITNESS_OIDC_PROVIDER_SLUG, i.e. "authelia")
+            - 'https://sparkyfitness.${DOMAIN}/api/auth/sso/callback/authelia'
+          scopes:
+            - 'openid'
+            - 'profile'
+            - 'email'
+            - 'groups'
+          userinfo_signed_response_alg: 'none'
+          token_endpoint_auth_method: 'client_secret_post'
+
+        - client_id: 'vikunja'
+          client_name: 'Vikunja'
+          # HASHED secret (pbkdf2-sha512). The matching PLAINTEXT lives in
+          # vikunja/config.yaml (clientsecret). Regenerate the pair with:
+          #   docker compose exec authelia authelia crypto hash generate pbkdf2 \
+          #     --variant sha512 --random --random.length 72 --random.charset rfc3986
+          client_secret: '$pbkdf2-sha512$REPLACE_WITH_HASHED_CLIENT_SECRET'
+          public: false
+          authorization_policy: 'one_factor'
+          redirect_uris:
+            # Vikunja callback = <public_url>/auth/openid/<provider-key>
+            # provider-key is "authelia" (the key in vikunja/config.yaml)
+            - 'https://vikunja.${DOMAIN}/auth/openid/authelia'
+          scopes:
+            - 'openid'
+            - 'profile'
+            - 'email'
+          userinfo_signed_response_alg: 'none'
+          token_endpoint_auth_method: 'client_secret_basic'
+
 access_control:
     default_policy: deny
     rules:
-
-      # CalDAV bypass for Vikunja
-      - domain: vikunja.${DOMAIN}
-        resources:
-          - "^/dav/.*/"
-        policy: bypass
 
       # Authelia Portal
       - domain: auth.${DOMAIN}
@@ -55,12 +124,13 @@ access_control:
         subject:
           - "group:admins"
 
-      # All Authenticated Users:
+      # All Authenticated Users (forward-auth via authelia@docker middleware).
+      # Note: Vikunja and SparkyFitness are NOT here — they authenticate via the
+      # OIDC clients defined in identity_providers.oidc above, not forward-auth.
       - domain:
           - pairdrop.${DOMAIN}
           - bentopdf.${DOMAIN}
           - booklore.${DOMAIN}
-          - vikunja.${DOMAIN}
           - omnitools.${DOMAIN}
           - n8n.${DOMAIN}
           - jellyfin.${DOMAIN}
