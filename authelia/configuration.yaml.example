@@ -68,6 +68,9 @@ identity_providers:
           client_secret: '$pbkdf2-sha512$REPLACE_WITH_HASHED_CLIENT_SECRET'
           public: false
           authorization_policy: 'one_factor'
+          # First-party app: ask for consent once, then remember it.
+          consent_mode: 'pre-configured'
+          pre_configured_consent_duration: '1y'
           claims_policy: 'sparkyfitness'
           # If SparkyFitness sends a PKCE code challenge you can harden this with:
           #   require_pkce: true
@@ -93,6 +96,9 @@ identity_providers:
           client_secret: '$pbkdf2-sha512$REPLACE_WITH_HASHED_CLIENT_SECRET'
           public: false
           authorization_policy: 'one_factor'
+          # First-party app: ask for consent once, then remember it.
+          consent_mode: 'pre-configured'
+          pre_configured_consent_duration: '1y'
           redirect_uris:
             # Vikunja callback = <public_url>/auth/openid/<provider-key>
             # provider-key is "authelia" (the key in vikunja/config.yaml)
