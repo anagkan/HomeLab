@@ -17,3 +17,4 @@ ddns-updater/data/config.json
 authelia/users_database.yaml
 authelia/user_database.yaml
 authelia/configuration.yaml
+authelia/configuration.yaml.bak.20260609-074901
