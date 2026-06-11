@@ -37,6 +37,8 @@ services:
       SPARKY_FITNESS_FRONTEND_URL: https://sparkyfitness.${DOMAIN}
       SPARKY_FITNESS_DISABLE_SIGNUP: ${SPARKY_FITNESS_DISABLE_SIGNUP:-false}
       SPARKY_FITNESS_ADMIN_EMAIL: ${SPARKY_FITNESS_ADMIN_EMAIL:-}
+      # Garmin Connect sync is delegated to the sparkyfitness-garmin microservice.
+      GARMIN_MICROSERVICE_URL: http://sparkyfitness-garmin:8000
       # --- OIDC single sign-on via Authelia ---
       SPARKY_FITNESS_OIDC_AUTH_ENABLED: ${SPARKY_FITNESS_OIDC_AUTH_ENABLED:-true}
       SPARKY_FITNESS_OIDC_PROVIDER_SLUG: ${SPARKY_FITNESS_OIDC_PROVIDER_SLUG:-authelia}
@@ -92,6 +94,25 @@ services:
       # SparkyFitness authenticates users directly against Authelia via OIDC
       # (single sign-on), so a forward-auth gate would double-prompt for login.
       # Authelia is registered as the OIDC provider in authelia/configuration.yaml.
+
+  # Garmin Connect integration. The server (GARMIN_MICROSERVICE_URL) calls this
+  # FastAPI microservice, which logs into Garmin and pulls activity/body data.
+  # Internal only - never exposed to Traefik; no auth of its own.
+  sparkyfitness-garmin:
+    image: codewithcj/sparkyfitness_garmin:latest
+    container_name: sparkyfitness-garmin
+    restart: unless-stopped
+    depends_on:
+      - sparkyfitness-db
+      - sparkyfitness-server
+    environment:
+      GARMIN_SERVICE_PORT: 8000
+      GARMIN_SERVICE_IS_CN: "false"   # true only for Garmin China region
+      TZ: America/New_York
+      PUID: 1000
+      GUID: 1000
+    networks:
+      - sparkyfitness   # internal only - reached by the server
 
 networks:
   sparkyfitness:
