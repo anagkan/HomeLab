@@ -41,6 +41,10 @@ services:
       # Disabled for now in favor of the Health Connect path (mobile app). Re-enable
       # together with the sparkyfitness-garmin container below.
       # GARMIN_MICROSERVICE_URL: http://sparkyfitness-garmin:8000
+      # The Sparky Buddy AI chat loads its tools from the MCP server. Without this
+      # URL the server tries to spawn the MCP process locally, which isn't bundled
+      # in the server image -> chat fails with {"error":"Connection closed"}.
+      SPARKY_FITNESS_MCP_URL: http://sparkyfitness-mcp:3001
       # --- OIDC single sign-on via Authelia ---
       SPARKY_FITNESS_OIDC_AUTH_ENABLED: ${SPARKY_FITNESS_OIDC_AUTH_ENABLED:-true}
       SPARKY_FITNESS_OIDC_PROVIDER_SLUG: ${SPARKY_FITNESS_OIDC_PROVIDER_SLUG:-authelia}
@@ -110,6 +114,38 @@ services:
   # (SparkyFitnessMobile app) instead. To re-enable, uncomment this block AND the
   # GARMIN_MICROSERVICE_URL env var on sparkyfitness-server above.
   #
+  # MCP server: tool backend for the Sparky Buddy AI chat (food lookup cascade,
+  # diary logging, etc.). The server calls it at SPARKY_FITNESS_MCP_URL over the
+  # internal bridge network. Internal only - never exposed to Traefik; requests
+  # are authenticated by forwarding the user's session (BETTER_AUTH_SECRET must
+  # match the server's).
+  sparkyfitness-mcp:
+    image: codewithcj/sparkyfitness_mcp:latest
+    container_name: sparkyfitness-mcp
+    restart: unless-stopped
+    depends_on:
+      - sparkyfitness-db
+    environment:
+      SPARKY_FITNESS_DB_USER: ${SPARKY_FITNESS_DB_USER}
+      SPARKY_FITNESS_DB_HOST: sparkyfitness-db
+      SPARKY_FITNESS_DB_NAME: ${SPARKY_FITNESS_DB_NAME}
+      SPARKY_FITNESS_DB_PASSWORD: ${SPARKY_FITNESS_DB_PASSWORD}
+      SPARKY_FITNESS_APP_DB_USER: ${SPARKY_FITNESS_APP_DB_USER}
+      SPARKY_FITNESS_APP_DB_PASSWORD: ${SPARKY_FITNESS_APP_DB_PASSWORD}
+      SPARKY_FITNESS_DB_PORT: 5432
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      MCP_TRANSPORT: "http"
+      SPARKY_FITNESS_SERVER_HOST: sparkyfitness-server
+      SPARKY_FITNESS_SERVER_PORT: 3010
+      SPARKY_FITNESS_FRONTEND_URL: https://sparkyfitness.${DOMAIN}
+      ALLOW_PRIVATE_NETWORK_CORS: ${ALLOW_PRIVATE_NETWORK_CORS:-false}
+      SPARKY_FITNESS_EXTRA_TRUSTED_ORIGINS: ${SPARKY_FITNESS_EXTRA_TRUSTED_ORIGINS:-}
+      TZ: America/New_York
+      PUID: 1000
+      GUID: 1000
+    networks:
+      - sparkyfitness   # internal only - reached by the server
+
   # sparkyfitness-garmin:
   #   image: codewithcj/sparkyfitness_garmin:latest
   #   container_name: sparkyfitness-garmin
