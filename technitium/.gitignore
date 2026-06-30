@@ -1,2 +1,5 @@
 # Technitium runtime data (DNS zones, settings, logs) — node-local, do not commit
 config/
+
+# Node-specific env (real Tailscale IP) — commit .env.example instead
+.env

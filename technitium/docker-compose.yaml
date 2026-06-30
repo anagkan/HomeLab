@@ -4,11 +4,11 @@ services:
     container_name: technitium
     restart: unless-stopped
     ports:
-      # Bound to this VPS's Tailscale IP so DNS is reachable only over the tailnet.
-      # NOTE: this IP is specific to the `technitium` Oracle node.
-      - "100.118.88.67:53:53/udp"
-      - "100.118.88.67:53:53/tcp"
-      - "100.118.88.67:5380:5380/tcp"
+      # Bound to this node's Tailscale IP (set TAILSCALE_IP in .env) so DNS is
+      # reachable only over the tailnet, never the public interface.
+      - "${TAILSCALE_IP}:53:53/udp"
+      - "${TAILSCALE_IP}:53:53/tcp"
+      - "${TAILSCALE_IP}:5380:5380/tcp"
     environment:
       - TZ=America/New_York
       - DNS_SERVER_DOMAIN=technitium
