@@ -29,6 +29,12 @@ authentication_backend:
           salt_length: 16
           key_length: 32
 
+webauthn:
+  disable: false
+  enable_passkey_login: true
+
+
+
 # OpenID Connect provider. Services that log into Authelia directly as an OIDC
 # client (SparkyFitness, Vikunja) are registered here instead of sitting behind
 # the authelia@docker forward-auth middleware — so they also get NO forward-auth
